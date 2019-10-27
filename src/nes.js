@@ -204,6 +204,14 @@ NES.prototype = {
     this.cpu.fromJSON(s.cpu);
     this.mmap.fromJSON(s.mmap);
     this.ppu.fromJSON(s.ppu);
+  },
+  
+  loadSave: function(){
+    var myref = this;
+    fetch('../save.json')
+    // eslint-disable-next-line no-undef
+    .then(function(x) {return x.json()})
+    .then(function(x) {myref.fromJSON(x)})
   }
 };
 

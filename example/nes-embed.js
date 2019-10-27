@@ -2,6 +2,11 @@ var SCREEN_WIDTH = 256;
 var SCREEN_HEIGHT = 240;
 var FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
+var noscrollWidth = 256 * 4;//2816; //767;
+var noscrollSplit = 64;
+var noscrollFullWidth = 2816;
+var noscrollOffset = 0;	
+
 var canvas_ctx, image;
 var framebuffer_u8, framebuffer_u32;
 var scrollOffsetX = 0;
@@ -34,7 +39,7 @@ function onAnimationFrame(){
 	//cube_canvas_ctx.putImageData(image, 0,  -140, 0, 140, 256, 64);
 
 	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-	var offset1 = 767 - (767 + (scrollOffsetX + ((screenOffset - 1) * 255)))
+	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 255)))
 	var offset2 = scrollOffsetX + ((screenOffset - 1) * 255)
 	noscroll_canvas_ctx.drawImage(img,0,48);
 	noscroll_canvas_ctx.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
@@ -110,7 +115,7 @@ function nes_init(canvas_id){
 	var canvas_noscroll = document.getElementById('noscroll-canvas');
 	noscroll_canvas_ctx = canvas_noscroll.getContext("2d");
 	img = new Image() 
-	img.src = "../map0.png" 
+	img.src = "../map1.png" 
 	
 
 
@@ -147,6 +152,7 @@ function nes_load_url(canvas_id, path){
 	req.onload = function() {
 		if (this.status === 200) {
 		nes_boot(this.responseText);
+		nes.loadSave()
 		} else if (this.status === 0) {
 			// Aborted, so ignore error
 		} else {
