@@ -4,7 +4,8 @@ var FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
 var canvas_ctx, image;
 var framebuffer_u8, framebuffer_u32;
-
+var scrollOffsetX = 0;
+var screenOffset = 0;
 var AUDIO_BUFFERING = 512;
 var SAMPLE_COUNT = 4*1024;
 var SAMPLE_MASK = SAMPLE_COUNT - 1;
@@ -27,7 +28,19 @@ function onAnimationFrame(){
 	window.requestAnimationFrame(onAnimationFrame);
 	
 	image.data.set(framebuffer_u8);
-	canvas_ctx.putImageData(image, 0, 0);
+	//canvas_ctx.putImageData(image, 0, 0);
+
+	// ctx.putImageData(imageData, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
+	//cube_canvas_ctx.putImageData(image, 0,  -140, 0, 140, 256, 64);
+
+	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+	var offset1 = 767 - (767 + (scrollOffsetX + ((screenOffset - 1) * 255)))
+	var offset2 = scrollOffsetX + ((screenOffset - 1) * 255)
+	noscroll_canvas_ctx.drawImage(img,0,48);
+	noscroll_canvas_ctx.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+
+	//console.log(offset)
+	//cube_canvas_ctx.putImageData(image, 64, 0, 64,  0, 64, 64);
 	nes.frame();
 }
 
@@ -85,7 +98,22 @@ function nes_init(canvas_id){
 	
 	canvas_ctx.fillStyle = "black";
 	canvas_ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	
+	var canvas_cube = document.getElementById('cube-canvas');
+	cube_canvas_ctx = canvas_cube.getContext("2d");
+	image_cube = cube_canvas_ctx.getImageData(0, 0, 265, 64);
+	
+	cube_canvas_ctx.fillStyle = "black";
+	cube_canvas_ctx.fillRect(0, 0, 265, 64);
+
+	var canvas_noscroll = document.getElementById('noscroll-canvas');
+	noscroll_canvas_ctx = canvas_noscroll.getContext("2d");
+	img = new Image() 
+	img.src = "../map0.png" 
+	
+
+
 	// Allocate framebuffer array.
 	var buffer = new ArrayBuffer(image.data.length);
 	framebuffer_u8 = new Uint8ClampedArray(buffer);

@@ -1,5 +1,9 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
 var Tile = require("./tile");
 var utils = require("./utils");
+var prevScroll = 0
+
 
 var PPU = function(nes) {
   this.nes = nes;
@@ -628,7 +632,17 @@ PPU.prototype = {
   // horizontal offset:
   scrollWrite: function(value) {
     this.triggerRendering();
-
+    if (value > 0 && value !== prevScroll){
+      // eslint-disable-next-line no-undef
+      if (prevScroll === 255 && value < 5){
+        screenOffset++;
+      }
+      else if (screenOffset > 0 && prevScroll === 1 && value > 250) {
+        screenOffset--;
+      }
+      scrollOffsetX = value
+      prevScroll = value
+    }
     if (this.firstWrite) {
       // First write, horizontal scroll:
       this.regHT = (value >> 3) & 31;
