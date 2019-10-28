@@ -40,33 +40,32 @@ function onAnimationFrame(){
 
 	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 256)));
-	var offset2 = scrollOffsetX + ((screenOffset - 1) * 256)
-	var characterPos = offset2 + ((SCREEN_WIDTH - 16) / 2);
-	if (characterPos < 0){
-		characterPos = 20;
-	}
-	var startWindow = characterPos - 128;
-	var endWindow = characterPos + 128
+	var levelOffset = scrollOffsetX + ((screenOffset - 1) * SCREEN_WIDTH)
+	var offsetWithinNoScrollFrame = levelOffset % noscrollWidth
+	var overflowWidth = ((offsetWithinNoScrollFrame + SCREEN_WIDTH - 16) - noscrollWidth);
+	var overflowOffset = (scrollOffsetX - ((screenOffset - 1) * SCREEN_WIDTH)) % noscrollWidth;
+
+
 	
 	noscroll_canvas_ctx.drawImage(img,0,48);
-	var offset3 = (offset2 + SCREEN_WIDTH - 16) - noscrollWidth;
-	noscroll_canvas_ctx.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
-	var offset4 = scrollOffsetX - ((screenOffset - 1) * 256);
-	if (offset2 + SCREEN_WIDTH - 16 > noscrollWidth && offset3 < SCREEN_WIDTH  ){
-		console.log(offset4)
-		noscroll_canvas_ctx.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
+	
+	noscroll_canvas_ctx.putImageData(image, offsetWithinNoScrollFrame, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	
+	if (overflowWidth > 0 && overflowWidth < SCREEN_WIDTH  ){
+		//console.log('levelOffset:' + levelOffset + 'offsetWithinNoScrollFrame:'+ offsetWithinNoScrollFrame + 'overflow:' + overflow)
+		noscroll_canvas_ctx.putImageData(image,overflowOffset, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
 	}
 
 
 	noscroll_canvas_ctx0.drawImage(img,0,48);
-	noscroll_canvas_ctx0.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	noscroll_canvas_ctx0.putImageData(image, levelOffset, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
 
 	noscroll_canvas_ctx1.drawImage(img,0,48);
-	noscroll_canvas_ctx1.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
-	if (offset2 + SCREEN_WIDTH - 16 > noscrollWidth){
+	noscroll_canvas_ctx1.putImageData(image, levelOffset, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	if (levelOffset + SCREEN_WIDTH - 16 > noscrollWidth){
 		
-		noscroll_canvas_ctx0.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
-		noscroll_canvas_ctx1.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
+		noscroll_canvas_ctx0.putImageData(image,offsetWithinNoScrollFrame, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
+		noscroll_canvas_ctx1.putImageData(image,offsetWithinNoScrollFrame, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
 	}
 
 	//console.log(offset)
