@@ -637,7 +637,7 @@ PPU.prototype = {
       if (prevScroll === 255 && value < 5){
         screenOffset++;
       }
-      else if (screenOffset > 0 && prevScroll === 1 && value > 250) {
+      else if (screenOffset > 0 && prevScroll === 1 && value > 254) {
         screenOffset--;
       }
       scrollOffsetX = value

@@ -2,7 +2,7 @@ var SCREEN_WIDTH = 256;
 var SCREEN_HEIGHT = 240;
 var FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
-var noscrollWidth = 256 * 4;//2816; //767;
+var noscrollWidth = 512;//2816; //767;
 var noscrollSplit = 64;
 var noscrollFullWidth = 2816;
 var noscrollOffset = 0;	
@@ -39,10 +39,35 @@ function onAnimationFrame(){
 	//cube_canvas_ctx.putImageData(image, 0,  -140, 0, 140, 256, 64);
 
 	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 255)))
-	var offset2 = scrollOffsetX + ((screenOffset - 1) * 255)
+	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 256)));
+	var offset2 = scrollOffsetX + ((screenOffset - 1) * 256)
+	var characterPos = offset2 + ((SCREEN_WIDTH - 16) / 2);
+	if (characterPos < 0){
+		characterPos = 20;
+	}
+	var startWindow = characterPos - 128;
+	var endWindow = characterPos + 128
+	
 	noscroll_canvas_ctx.drawImage(img,0,48);
+	var offset3 = (offset2 + SCREEN_WIDTH - 16) - noscrollWidth;
 	noscroll_canvas_ctx.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	var offset4 = scrollOffsetX - ((screenOffset - 1) * 256);
+	if (offset2 + SCREEN_WIDTH - 16 > noscrollWidth && offset3 < SCREEN_WIDTH  ){
+		console.log(offset4)
+		noscroll_canvas_ctx.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
+	}
+
+
+	noscroll_canvas_ctx0.drawImage(img,0,48);
+	noscroll_canvas_ctx0.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+
+	noscroll_canvas_ctx1.drawImage(img,0,48);
+	noscroll_canvas_ctx1.putImageData(image, offset2, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	if (offset2 + SCREEN_WIDTH - 16 > noscrollWidth){
+		
+		noscroll_canvas_ctx0.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
+		noscroll_canvas_ctx1.putImageData(image,offset4, 0, SCREEN_WIDTH - offset3 - 8, 0, offset3, SCREEN_HEIGHT);
+	}
 
 	//console.log(offset)
 	//cube_canvas_ctx.putImageData(image, 64, 0, 64,  0, 64, 64);
@@ -116,6 +141,12 @@ function nes_init(canvas_id){
 	noscroll_canvas_ctx = canvas_noscroll.getContext("2d");
 	img = new Image() 
 	img.src = "../map1.png" 
+	
+
+	var canvas_noscroll0 = document.getElementById('noscroll-canvas0');
+	noscroll_canvas_ctx0 = canvas_noscroll0.getContext("2d");
+	var canvas_noscroll1 = document.getElementById('noscroll-canvas1');
+	noscroll_canvas_ctx1 = canvas_noscroll1.getContext("2d");
 	
 
 
