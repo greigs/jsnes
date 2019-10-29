@@ -3,9 +3,8 @@ var SCREEN_HEIGHT = 240;
 var FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
 var noscrollWidth = 256;//2816; //767;
-var noscrollSplit = 64;
-var noscrollFullWidth = 2816;
-var noscrollOffset = 0;	
+var cubeHeight = 64;
+var yoffset = 0;
 
 var canvas_ctx, image;
 var framebuffer_u8, framebuffer_u32;
@@ -33,35 +32,26 @@ function onAnimationFrame(){
 	window.requestAnimationFrame(onAnimationFrame);
 	
 	image.data.set(framebuffer_u8);
-	//canvas_ctx.putImageData(image, 0, 0);
 
 	// ctx.putImageData(imageData, dx, dy, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
-	//cube_canvas_ctx.putImageData(image, 0,  -140, 0, 140, 256, 64);
-
 	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 256)));
 	var levelOffset = scrollOffsetX + ((screenOffset - 1) * SCREEN_WIDTH)
 	var offsetWithinNoScrollFrame = (levelOffset % noscrollWidth)
 	var overflowWidth = ((offsetWithinNoScrollFrame + SCREEN_WIDTH - 16) - noscrollWidth);
 	var overflowOffset = (scrollOffsetX - ((screenOffset - 1) * SCREEN_WIDTH)) % noscrollWidth;
 
-    var outerScrollOverflowOffset = levelOffset - offsetWithinNoScrollFrame + noscrollWidth
-	
-	noscroll_canvas_ctx.drawImage(img,levelOffset - offsetWithinNoScrollFrame,0,offsetWithinNoScrollFrame + (SCREEN_WIDTH * 2),SCREEN_HEIGHT, 0,48,offsetWithinNoScrollFrame + (SCREEN_WIDTH * 2),SCREEN_HEIGHT);
-	noscroll_canvas_ctx.putImageData(image, offsetWithinNoScrollFrame, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
+	var stairs1start = 624 - (SCREEN_HEIGHT / 2) - 10
+	var stairs1end = 688 - (SCREEN_HEIGHT / 2) - 10
+	var yoffsetcube = 148;
+	if (levelOffset > stairs1start && levelOffset < stairs1end){
+		yoffset = (levelOffset - stairs1start) * -1
+	}
+	noscroll_canvas_ctx.putImageData(image, offsetWithinNoScrollFrame, (-1 * yoffsetcube) - yoffset, 8,yoffsetcube + yoffset, SCREEN_WIDTH - 16, cubeHeight);
 	
 	if (overflowWidth > 0 && overflowWidth < SCREEN_WIDTH  ){
-		//console.log('levelOffset:' + levelOffset + 'offsetWithinNoScrollFrame:'+ offsetWithinNoScrollFrame + 'overflow:' + overflow)
-
-		//console.log(levelOffset - offsetWithinNoScrollFrame + noscrollWidth)
-		
-		//noscroll_canvas_ctx.drawImage(img, outerScrollOverflowOffset ,0,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT, 0,48,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT);
-		noscroll_canvas_ctx.putImageData(image,overflowOffset, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
-
+		console.log(overflowOffset)
+		noscroll_canvas_ctx.putImageData(image,overflowOffset, (-1 * yoffsetcube) - yoffset, SCREEN_WIDTH - overflowWidth - 8, yoffsetcube + yoffset, overflowWidth, cubeHeight);
 	}
-
-	//console.log(offset)
-	//cube_canvas_ctx.putImageData(image, 64, 0, 64,  0, 64, 64);
 	nes.frame();
 }
 
@@ -120,25 +110,11 @@ function nes_init(canvas_id){
 	canvas_ctx.fillStyle = "black";
 	canvas_ctx.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	
-	var canvas_cube = document.getElementById('cube-canvas');
-	cube_canvas_ctx = canvas_cube.getContext("2d");
-	image_cube = cube_canvas_ctx.getImageData(0, 0, 265, 64);
-	
-	cube_canvas_ctx.fillStyle = "black";
-	cube_canvas_ctx.fillRect(0, 0, 265, 64);
-
 	var canvas_noscroll = document.getElementById('noscroll-canvas');
 	noscroll_canvas_ctx = canvas_noscroll.getContext("2d");
 	img = new Image() 
 	img.src = "../map1.png" 
-	
-
-	var canvas_noscroll0 = document.getElementById('noscroll-canvas0');
-	noscroll_canvas_ctx0 = canvas_noscroll0.getContext("2d");
-	var canvas_noscroll1 = document.getElementById('noscroll-canvas1');
-	noscroll_canvas_ctx1 = canvas_noscroll1.getContext("2d");
-	
+		
 
 
 	// Allocate framebuffer array.
