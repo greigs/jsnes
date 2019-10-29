@@ -41,31 +41,23 @@ function onAnimationFrame(){
 	// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 	//var offset1 = noscrollWidth - (noscrollWidth + (scrollOffsetX + ((screenOffset - 1) * 256)));
 	var levelOffset = scrollOffsetX + ((screenOffset - 1) * SCREEN_WIDTH)
-	var offsetWithinNoScrollFrame = levelOffset % noscrollWidth
+	var offsetWithinNoScrollFrame = (levelOffset % noscrollWidth)
 	var overflowWidth = ((offsetWithinNoScrollFrame + SCREEN_WIDTH - 16) - noscrollWidth);
 	var overflowOffset = (scrollOffsetX - ((screenOffset - 1) * SCREEN_WIDTH)) % noscrollWidth;
 
-
+    var outerScrollOverflowOffset = levelOffset - offsetWithinNoScrollFrame + noscrollWidth
 	
-	noscroll_canvas_ctx.drawImage(img,0,48);
-	
+	noscroll_canvas_ctx.drawImage(img,levelOffset - offsetWithinNoScrollFrame,0,offsetWithinNoScrollFrame + (SCREEN_WIDTH * 2),SCREEN_HEIGHT, 0,48,offsetWithinNoScrollFrame + (SCREEN_WIDTH * 2),SCREEN_HEIGHT);
 	noscroll_canvas_ctx.putImageData(image, offsetWithinNoScrollFrame, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
 	
 	if (overflowWidth > 0 && overflowWidth < SCREEN_WIDTH  ){
 		//console.log('levelOffset:' + levelOffset + 'offsetWithinNoScrollFrame:'+ offsetWithinNoScrollFrame + 'overflow:' + overflow)
-		noscroll_canvas_ctx.putImageData(image,overflowOffset, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
-	}
 
-
-	noscroll_canvas_ctx0.drawImage(img,0,48);
-	noscroll_canvas_ctx0.putImageData(image, levelOffset, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
-
-	noscroll_canvas_ctx1.drawImage(img,0,48);
-	noscroll_canvas_ctx1.putImageData(image, levelOffset, 0, 8,0, SCREEN_WIDTH - 16, SCREEN_HEIGHT);
-	if (levelOffset + SCREEN_WIDTH - 16 > noscrollWidth){
+		//console.log(levelOffset - offsetWithinNoScrollFrame + noscrollWidth)
 		
-		noscroll_canvas_ctx0.putImageData(image,offsetWithinNoScrollFrame, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
-		noscroll_canvas_ctx1.putImageData(image,offsetWithinNoScrollFrame, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
+		noscroll_canvas_ctx.drawImage(img, outerScrollOverflowOffset ,0,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT, 0,48,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT);
+		noscroll_canvas_ctx.putImageData(image,overflowOffset, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
+
 	}
 
 	//console.log(offset)
