@@ -2,7 +2,7 @@ var SCREEN_WIDTH = 256;
 var SCREEN_HEIGHT = 240;
 var FRAMEBUFFER_SIZE = SCREEN_WIDTH*SCREEN_HEIGHT;
 
-var noscrollWidth = 512;//2816; //767;
+var noscrollWidth = 256;//2816; //767;
 var noscrollSplit = 64;
 var noscrollFullWidth = 2816;
 var noscrollOffset = 0;	
@@ -55,7 +55,7 @@ function onAnimationFrame(){
 
 		//console.log(levelOffset - offsetWithinNoScrollFrame + noscrollWidth)
 		
-		noscroll_canvas_ctx.drawImage(img, outerScrollOverflowOffset ,0,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT, 0,48,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT);
+		//noscroll_canvas_ctx.drawImage(img, outerScrollOverflowOffset ,0,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT, 0,48,overflowWidth + (SCREEN_WIDTH / 2),SCREEN_HEIGHT);
 		noscroll_canvas_ctx.putImageData(image,overflowOffset, 0, SCREEN_WIDTH - overflowWidth - 8, 0, overflowWidth, SCREEN_HEIGHT);
 
 	}
